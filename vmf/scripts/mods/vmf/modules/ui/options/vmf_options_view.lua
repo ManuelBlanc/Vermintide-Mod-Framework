@@ -2762,11 +2762,11 @@ local _SCROLL_STEP
 
 -- copypasted 'math.point_is_inside_2d_box' from VT2 source code, since VT1 and VT2 have different implementations
 local function is_point_inside_2d_box(pos, lower_left_corner, size)
-	if lower_left_corner[1] < pos[1] and pos[1] < lower_left_corner[1] + size[1] and lower_left_corner[2] < pos[2] and pos[2] < lower_left_corner[2] + size[2] then
-		return true
-	else
-		return false
-	end
+  if lower_left_corner[1] < pos[1] and pos[1] < lower_left_corner[1] + size[1] and lower_left_corner[2] < pos[2] and pos[2] < lower_left_corner[2] + size[2] then
+    return true
+  else
+    return false
+  end
 end
 
 -- ####################################################################################################################
