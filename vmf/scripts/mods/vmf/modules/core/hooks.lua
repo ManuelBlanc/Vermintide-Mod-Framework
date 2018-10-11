@@ -405,6 +405,29 @@ function VMFMod:hook_origin(obj, method, handler)
   return generic_hook(self, obj, method, handler, "hook_origin")
 end
 
+local _id = function(...) return ... end
+local function _wrap(func)
+  return function(...)
+    local n, ret = get_return_values(vmf.pcall(func, ...))
+    if ret[1] then
+      return unpack(ret, 2, n)
+    else
+      return ...
+    end
+  end
+end
+function VMFMod:hook_easy(obj, method, before, after)
+  -- Make sure the handlers have a value
+  before = before and _wrap(before) or _id
+  after  = after  and _wrap(after ) or _id
+
+  local function handler(func, ...)
+    return after(func(before(...)))
+  end
+
+  return generic_hook(self, obj, method, handler, "hook")
+end
+
 -- Enable/disable functions for all hook types:
 function VMFMod:hook_enable(obj, method)
   generic_hook_toggle(self, obj, method, true)
