@@ -51,6 +51,30 @@ function new_mod(mod_name, mod_resources)
     return
   end
 
+  -- Set the mod version
+  local vmf_version
+
+  if mod_resources.vmf_version then
+    vmf_version = tonumber(mod_resources.vmf_version)
+  else
+    mod:info("(new_mod): 'mod_resources' table should have a 'vmf_version' field. Set to '1' for compatibility.")
+    vmf_version = 1
+  end
+
+  if vmf_version == nil or vmf_version < 1 then
+    mod:warning("(new_mod): 'mod_resources.vmf_version' is invalid. Set to '1' for compatibility.")
+      vmf_version = 1
+  end
+
+  -- We can check for a version mismatch here.
+  --[[
+  if vmf_version ~= vmf.version then
+    mod:warning("(new_mod): Vermintide Mod Framework version mismatch: the mod expected %i, but the current version is %i", vmf_version, vmf.version)
+  end
+  --]]
+
+  vmf.set_internal_data(mod, "vmf_version", vmf_version)
+
   -- Load localization data file
   if mod_resources.mod_localization then
     local success, localization_table = vmf.xpcall_dofile(mod, "(new_mod)('mod_localization' initialization)",
@@ -94,6 +118,7 @@ end
 -- #####################################################################################################################
 
 vmf = create_mod("VMF")
+vmf.version = 1
 
 -- #####################################################################################################################
 -- ##### VMF internal functions and variables ##########################################################################
